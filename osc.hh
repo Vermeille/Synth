@@ -8,7 +8,14 @@
 #define M_TAUOVR2 M_PI
 
 template <class Param = SInt16, int SR = 44100>
-class Oscillo
+struct MonoSource
+{
+    typedef typename Param::data_type data_type;
+    virtual data_type Gen() = 0;
+};
+
+template <class Param = SInt16, int SR = 44100>
+class Oscillo : public MonoSource<Param, SR>
 {
     public:
         typedef typename Param::data_type data_type;

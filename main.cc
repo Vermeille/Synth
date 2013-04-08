@@ -10,27 +10,26 @@
 #include "sinus.hh"
 #include "saw.hh"
 
-#include "../canvas/canvas.hh"
+#include "stereo_merge.hh"
 
 int main(int argc, char const *argv[])
 {
-    Saw<SInt16, 44100> osc;
-    Sinus<SFloat, 44100> lfo;
-    Square<> sq;
-    lfo.freq(3);
-
-    std::vector<float> vs;
+    Saw<SInt16, 44100> oscl;
+    Square<SInt16, 44100> oscr;
+    StereoMerge<> sm(&oscl, &oscr);
+    oscr.freq(500);
 
     while (true)
     {
         for (int i = 0; i < 100; ++i)
         {
-            short s = osc.Gen();
-            std::cout.write(reinterpret_cast<char*>(&s), 2);
+            auto res = sm.Gen();
+            std::cout.write(reinterpret_cast<char*>(&res.first), 2);
+            std::cout.write(reinterpret_cast<char*>(&res.second), 2);
         }
         std::cout.flush();
     }
-    return (0);
+    return 0;
 }
 
 
