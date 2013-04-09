@@ -6,8 +6,9 @@ ADD_EXECUTABLE(synth
     sinus.cc
     square.cc
     triangle.cc
+    wavetable.cc
     stereo_merge.cc
     mono_to_stereo.cc
 )
 
-SET(CMAKE_CXX_FLAGS -std=c++11)
+SET(CMAKE_CXX_FLAGS "-std=c++11 -g -ggdb3")
