@@ -3,16 +3,13 @@
 #include "params.hh"
 #include "osc.hh"
 
-template <class Param = SInt16, int SampleRate = 44100>
-class Square : public Oscillo<Param, SampleRate>
+class Square : public Oscillo
 {
     public:
-        typedef typename Param::data_type data_type;
-        virtual data_type Gen() override;
+        virtual float Gen() override;
 };
 
-template <class Param, int SR>
-typename Param::data_type Square<Param, SR>::Gen()
+float Square::Gen()
 {
     if (this->phase_ >= M_TAU)
         this->phase_ -= M_TAU;
@@ -20,7 +17,7 @@ typename Param::data_type Square<Param, SR>::Gen()
     this->phase_ += this->phase_incr_;
 
     if (this->phase_ < M_TAUOVR2)
-        return Param::min;
+        return -1.f;
     else
-        return Param::max;
+        return 1.f;
 }

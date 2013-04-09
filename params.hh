@@ -1,5 +1,7 @@
 #pragma once
 
+#define SAMPLE_RATE 44100
+
 struct SFloat
 {
     typedef float data_type;
@@ -21,9 +23,21 @@ struct SInt16
 struct SInt8
 {
     typedef char data_type;
-    constexpr static char min = -127;
-    constexpr static char max = 128;
+    constexpr static char min = -128;
+    constexpr static char max = 127;
     constexpr static char zero = 0;
     constexpr static double amp = (SInt8::max - SInt8::min - 1);
 };
 
+template <class Param>
+typename Param::data_type Render(float f)
+{
+    return Param::amp / 2 * f + Param::zero;
+}
+
+template <class Param>
+std::pair<typename Param::data_type, typename Param::data_type>
+Render(const std::pair<float, float>& f)
+{
+    return std::make_pair(Render<Param>(f.first), Render<Param>(f.second));
+}

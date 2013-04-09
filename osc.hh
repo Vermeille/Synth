@@ -7,22 +7,17 @@
 #define M_TAU (2 * M_PI)
 #define M_TAUOVR2 M_PI
 
-template <class Param = SInt16, int SR = 44100>
 struct MonoSource
 {
-    typedef typename Param::data_type data_type;
-    virtual data_type Gen() = 0;
+    virtual float Gen() = 0;
 };
 
-template <class Param = SInt16, int SR = 44100>
-class Oscillo : public MonoSource<Param, SR>
+class Oscillo : public MonoSource
 {
     public:
-        typedef typename Param::data_type data_type;
-
         Oscillo();
 
-        virtual data_type Gen() = 0;
+        virtual float Gen() = 0;
         void freq(float f);
         float freq();
 
@@ -32,21 +27,19 @@ class Oscillo : public MonoSource<Param, SR>
         float phase_incr_;
 };
 
-template <class Param, int SR>
-void Oscillo<Param, SR>::freq(float f)
+void Oscillo::freq(float f)
 {
     freq_ = f;
-    phase_incr_ = M_TAU * f / SR;
+    phase_incr_ = M_TAU * f / SAMPLE_RATE;
 }
 
-template <class Param, int SR>
-float Oscillo<Param, SR>::freq()
+float Oscillo::freq()
 {
-    return freq;
+    return freq_;
 }
 
-template <class Param, int SR>
-Oscillo<Param, SR>::Oscillo()
+Oscillo::Oscillo()
 {
+    phase_ = 0;
     freq(440);
 }

@@ -14,18 +14,18 @@
 
 int main(int argc, char const *argv[])
 {
-    Saw<SInt16, 44100> oscl;
-    Square<SInt16, 44100> oscr;
-    StereoMerge<> sm(&oscl, &oscr);
-    oscr.freq(500);
+    Sinus oscl;
+    Sinus oscr;
+    StereoMerge sm(&oscl, &oscr);
+    oscr.freq(450);
 
     while (true)
     {
         for (int i = 0; i < 100; ++i)
         {
-            auto res = sm.Gen();
-            std::cout.write(reinterpret_cast<char*>(&res.first), 2);
-            std::cout.write(reinterpret_cast<char*>(&res.second), 2);
+            auto res = Render<SInt8>(sm.Gen());
+            std::cout.write(reinterpret_cast<char*>(&res.first), 1);
+            std::cout.write(reinterpret_cast<char*>(&res.second), 1);
         }
         std::cout.flush();
     }

@@ -3,16 +3,13 @@
 #include "params.hh"
 #include "osc.hh"
 
-template <class Param = SInt16, int SampleRate = 44100>
-class Triangle : public Oscillo<Param, SampleRate>
+class Triangle : public Oscillo
 {
     public:
-        typedef typename Param::data_type data_type;
-        virtual data_type Gen() override;
+        virtual float Gen() override;
 };
 
-template <class Param, int SR>
-typename Param::data_type Triangle<Param, SR>::Gen()
+float Triangle::Gen()
 {
     if (this->phase_ >= M_TAU)
         this->phase_ -= M_TAU;
@@ -21,5 +18,5 @@ typename Param::data_type Triangle<Param, SR>::Gen()
 
     float val = 2 * this->phase_ / M_TAU - 1;
     val = fabs(val);
-    return Param::amp * (val - 0.5) + Param::zero;
+    return 2 * (val - 0.5);
 }
