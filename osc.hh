@@ -3,14 +3,10 @@
 #include <cmath>
 
 #include "params.hh"
+#include "mono_source.hh"
 
 #define M_TAU (2 * M_PI)
 #define M_TAUOVR2 M_PI
-
-struct MonoSource
-{
-    virtual float Gen() = 0;
-};
 
 class Oscillo : public MonoSource
 {
@@ -27,19 +23,3 @@ class Oscillo : public MonoSource
         float phase_incr_;
 };
 
-void Oscillo::freq(float f)
-{
-    freq_ = f;
-    phase_incr_ = M_TAU * f / SAMPLE_RATE;
-}
-
-float Oscillo::freq()
-{
-    return freq_;
-}
-
-Oscillo::Oscillo()
-{
-    phase_ = 0;
-    freq(440);
-}

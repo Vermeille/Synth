@@ -1,9 +1,7 @@
 #include <utility>
 
-struct StereoSource
-{
-    virtual std::pair<float, float> Gen() = 0;
-};
+#include "mono_source.hh"
+#include "stereo_source.hh"
 
 class StereoMerge : public StereoSource
 {
@@ -22,13 +20,3 @@ class StereoMerge : public StereoSource
         MonoSource* right_;
 };
 
-std::pair<float, float> StereoMerge::Gen()
-{
-    return std::make_pair(left_->Gen(), right_->Gen());
-}
-
-StereoMerge::StereoMerge(MonoSource* l, MonoSource* r)
-    : left_(l),
-    right_(r)
-{
-}

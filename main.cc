@@ -11,21 +11,26 @@
 #include "saw.hh"
 
 #include "stereo_merge.hh"
+#include "mono_to_stereo.hh"
+#include "fm.hh"
 
 int main(int argc, char const *argv[])
 {
     Sinus oscl;
-    Sinus oscr;
-    StereoMerge sm(&oscl, &oscr);
-    oscr.freq(450);
+    Saw oscr;
+    FM fm(&oscl, &oscr);
+    fm.mod_amp(100);
+    //StereoMerge sm(&fm, &fm);
+    MonoToStereo sm(&fm);
+    oscr.freq(2);
 
     while (true)
     {
         for (int i = 0; i < 100; ++i)
         {
-            auto res = Render<SInt8>(sm.Gen());
-            std::cout.write(reinterpret_cast<char*>(&res.first), 1);
-            std::cout.write(reinterpret_cast<char*>(&res.second), 1);
+            auto res = Render<SInt16>(sm.Gen());
+            std::cout.write(reinterpret_cast<char*>(&res.first), 2);
+            std::cout.write(reinterpret_cast<char*>(&res.second), 2);
         }
         std::cout.flush();
     }
