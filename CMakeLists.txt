@@ -10,6 +10,7 @@ ADD_EXECUTABLE(synth
     butterworth.cc
     stereo_merge.cc
     mono_to_stereo.cc
+    resonant_filter.cc
     first_order_filter.cc
 )
 
