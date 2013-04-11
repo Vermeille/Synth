@@ -7,6 +7,7 @@ ADD_EXECUTABLE(synth
     square.cc
     triangle.cc
     wavetable.cc
+    butterworth.cc
     stereo_merge.cc
     mono_to_stereo.cc
 )

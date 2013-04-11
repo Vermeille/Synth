@@ -5,9 +5,6 @@
 #include "params.hh"
 #include "mono_source.hh"
 
-#define M_TAU (2 * M_PI)
-#define M_TAUOVR2 M_PI
-
 class Oscillo : public MonoSource
 {
     public:

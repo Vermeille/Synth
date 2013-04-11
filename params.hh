@@ -4,6 +4,9 @@
 
 #define SAMPLE_RATE 44100
 
+#define M_TAU (2 * M_PI)
+#define M_TAUOVR2 M_PI
+
 struct SFloat
 {
     typedef float data_type;
