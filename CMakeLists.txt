@@ -9,6 +9,7 @@ ADD_EXECUTABLE(synth
     wavetable.cc
     butterworth.cc
     stereo_merge.cc
+    biquad_filter.cc
     mono_to_stereo.cc
     resonant_filter.cc
     first_order_filter.cc
