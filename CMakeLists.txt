@@ -10,6 +10,7 @@ ADD_EXECUTABLE(synth
     butterworth.cc
     stereo_merge.cc
     mono_to_stereo.cc
+    first_order_filter.cc
 )
 
 SET(CMAKE_CXX_FLAGS "-std=c++11 -g -ggdb3")
