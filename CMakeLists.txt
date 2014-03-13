@@ -7,6 +7,7 @@ ADD_EXECUTABLE(synth
     square.cc
     triangle.cc
     wavetable.cc
+    wav_export.cc
     butterworth.cc
     stereo_merge.cc
     biquad_filter.cc
