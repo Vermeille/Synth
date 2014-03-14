@@ -21,12 +21,13 @@
 #include "resonant_filter.hh"
 #include "first_order_filter.hh"
 #include "biquad_filter.hh"
+#include "wav_export.hh"
 
 int main(int argc, char const *argv[])
 {
     //Sinus oscl;
-    Saw oscl;
-    oscl.freq(100);
+    Sinus oscl;
+    oscl.freq(440);
 #if 0
     Sinus oscr;
 
@@ -47,7 +48,9 @@ int main(int argc, char const *argv[])
 #else
 # if 1
     BiquadFilter r(&oscl);
-    MonoToStereo sm(&r);
+    //MonoToStereo sm(&r);
+    WavExporter wav(&oscl);
+    wav.MkWav("le_caca.wav", 1);
 # else
     MonoToStereo sm(&oscl);
 # endif
@@ -56,6 +59,7 @@ int main(int argc, char const *argv[])
     float f = 200;
     float q = 0.1;
 
+#if 0
     while (true)
     {
         for (int i = 0; i < 100; ++i)
@@ -63,25 +67,10 @@ int main(int argc, char const *argv[])
             auto res = Render<SInt16>(sm.Gen());
             std::cout.write(reinterpret_cast<char*>(&res.first), 2);
             std::cout.write(reinterpret_cast<char*>(&res.second), 2);
-            //std::cerr << res.first << " ";
         }
         std::cout.flush();
-#if 1
-        if (f <= 22000)
-        {
-            f *= 1.001f;
-            r.MkLowPass(f, q);
-            //std::cerr << f << "\n";
-        }
-        else
-        {
-            f = 200;
-            q += 0.1;
-            std::cerr << "Q = " << q << "\n";
-            sleep(1);
-        }
-#endif
     }
+#endif
     return 0;
 }
 
