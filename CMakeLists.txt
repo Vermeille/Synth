@@ -1,19 +1,3 @@
-ADD_EXECUTABLE(synth
-    fm.cc
-    osc.cc
-    saw.cc
-    main.cc
-    sinus.cc
-    square.cc
-    triangle.cc
-    wavetable.cc
-    wav_export.cc
-    butterworth.cc
-    stereo_merge.cc
-    biquad_filter.cc
-    mono_to_stereo.cc
-    resonant_filter.cc
-    first_order_filter.cc
-)
-
-SET(CMAKE_CXX_FLAGS "-std=c++11 -g -ggdb3")
+cmake_minimum_required(VERSION 2.6)
+SET(CMAKE_CXX_FLAGS "-std=c++14 -Wall -Wextra -O3 -march=native -flto")
+add_subdirectory(src)
