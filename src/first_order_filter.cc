@@ -4,12 +4,12 @@
 
 #include <cmath>
 
-#include "params.hh"
 #include "first_order_filter.hh"
+#include "params.hh"
 
 FirstOrderFilter::FirstOrderFilter(MonoSource* src)
-    : src_(src),
-    prev_(0)
+    : src_(src)
+    , prev_(0)
 {
     MkLowPass(400);
 }
@@ -24,15 +24,14 @@ float FirstOrderFilter::Gen()
 
 void FirstOrderFilter::MkLowPass(float f)
 {
-    b_ = sqrt(pow(2. - cos(M_TAU * f / 44100.), 2) - 1)
-        - 2 + cos(M_TAU * f / 44100.);
+    b_ = sqrt(pow(2. - cos(M_TAU * f / 44100.), 2) - 1) - 2 +
+         cos(M_TAU * f / 44100.);
     a_ = 1 + b_;
 }
 
 void FirstOrderFilter::MkHighPass(float f)
 {
-    b_ = -(sqrt(pow(2. - cos(M_TAU * f / 44100.), 2) - 1)
-        - 2 + cos(M_TAU * f / 44100.));
+    b_ = -(sqrt(pow(2. - cos(M_TAU * f / 44100.), 2) - 1) - 2 +
+           cos(M_TAU * f / 44100.));
     a_ = 1 - b_;
 }
-

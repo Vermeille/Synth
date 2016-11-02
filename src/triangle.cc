@@ -15,4 +15,3 @@ float Triangle::Gen()
     val = fabs(val);
     return 2 * (val - 0.5);
 }
-

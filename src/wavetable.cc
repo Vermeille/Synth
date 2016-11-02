@@ -20,8 +20,6 @@ float Wavetable::Gen()
 
     float in_base = phase_ / M_TAU * (table_.size() - 1);
     int index = in_base;
-    return table_[index] + (table_[index + 1] - table_[index])
-        * (in_base - index);
+    return table_[index] +
+           (table_[index + 1] - table_[index]) * (in_base - index);
 }
-
-

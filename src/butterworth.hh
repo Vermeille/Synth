@@ -7,17 +7,16 @@
 
 class Butterworth : public MonoSource
 {
-    public:
-        Butterworth(MonoSource* src);
-        virtual float Gen() override;
+  public:
+    Butterworth(MonoSource* src);
+    virtual float Gen() override;
 
-        void MkLowPass(float freq);
-        void MkHighPass(float freq);
+    void MkLowPass(float freq);
+    void MkHighPass(float freq);
 
-    private:
-        MonoSource* src_;
-        CircularBuffer<float> buf_;
-        double a_[3];
-        double b_[2];
+  private:
+    MonoSource* src_;
+    CircularBuffer<float> buf_;
+    double a_[3];
+    double b_[2];
 };
-

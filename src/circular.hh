@@ -3,29 +3,29 @@
 template <class T>
 class CircularBuffer
 {
-    public:
-        typedef T value_type;
-        CircularBuffer(int size, T init);
-        ~CircularBuffer();
+  public:
+    typedef T value_type;
+    CircularBuffer(int size, T init);
+    ~CircularBuffer();
 
-        const T& operator[](int idx) const;
-        T& operator[](int idx);
+    const T& operator[](int idx) const;
+    T& operator[](int idx);
 
-        void push_front(T val);
-        unsigned size() const;
+    void push_front(T val);
+    unsigned size() const;
 
-    private:
-        T* buf_;
-        unsigned size_;
-        unsigned idx_;
+  private:
+    T* buf_;
+    unsigned size_;
+    unsigned idx_;
 };
 
 template <class T>
 CircularBuffer<T>::CircularBuffer(int size, T init)
-    : size_(size),
-    idx_(0)
+    : size_(size)
+    , idx_(0)
 {
-    buf_ = new T[size_];
+    buf_ = new T[size_]{init};
 }
 
 template <class T>

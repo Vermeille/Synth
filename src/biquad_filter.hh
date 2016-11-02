@@ -13,17 +13,16 @@
 
 class BiquadFilter : public MonoSource
 {
-    public:
-        BiquadFilter(MonoSource* src);
-        virtual float Gen() override;
+  public:
+    BiquadFilter(MonoSource* src);
+    virtual float Gen() override;
 
-        void MkLowPass(float freq, float q);
-        void MkHighPass(float freq);
+    void MkLowPass(float freq, float q);
+    void MkHighPass(float freq);
 
-    private:
-        MonoSource* src_;
-        CircularBuffer<float> buf_;
-        double a_[3];
-        double b_[2];
+  private:
+    MonoSource* src_;
+    CircularBuffer<float> buf_;
+    double a_[3];
+    double b_[2];
 };
-

@@ -4,7 +4,6 @@
 
 #include "adsr.hh"
 
-
 ADSR::ADSR(MonoSource* src)
     : index_(0)
 {
@@ -19,20 +18,11 @@ void ADSR::adsr(int index, float time, float val)
     adsr_[index][1] = val;
 }
 
-float* ADSR::adsr(int index)
-{
-    return adsr_[index];
-}
+float* ADSR::adsr(int index) { return adsr_[index]; }
 
-void ADSR::src(MonoSource *src)
-{
-    src_ = src;
-}
+void ADSR::src(MonoSource* src) { src_ = src; }
 
-MonoSource* ADSR::src()
-{
-    return src_;
-}
+MonoSource* ADSR::src() { return src_; }
 
 float ADSR::Gen()
 {
@@ -46,8 +36,7 @@ float ADSR::Gen()
     if (time_ > adsr_[index_ + 1][0])
         ++index_;
 
-    double coeff =  (adsr_[index_ + 1][1] - adsr_[index_][1])
-        / (adsr_[index_ + 1][0] - adsr_[index_][0]);
+    double coeff = (adsr_[index_ + 1][1] - adsr_[index_][1]) /
+                   (adsr_[index_ + 1][0] - adsr_[index_][0]);
     return v * (coeff * time_ + adsr_[index_][1] - coeff * adsr_[index_][0]);
 }
-

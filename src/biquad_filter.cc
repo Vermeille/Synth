@@ -5,12 +5,12 @@
 #include <cmath>
 #include <iostream>
 
-#include "params.hh"
 #include "biquad_filter.hh"
+#include "params.hh"
 
 BiquadFilter::BiquadFilter(MonoSource* src)
-    : src_(src),
-      buf_(3, 0)
+    : src_(src)
+    , buf_(3, 0)
 {
     MkLowPass(800, 0.5);
 }
@@ -28,9 +28,9 @@ void BiquadFilter::MkLowPass(float freq, float q)
     b_[1] = (1 - k / q + k * k) * norm;
 }
 
-void BiquadFilter::MkHighPass(float freq)
+void BiquadFilter::MkHighPass(float /* freq*/)
 {
-    //TODO
+    // TODO
 }
 
 float BiquadFilter::Gen()
@@ -40,5 +40,3 @@ float BiquadFilter::Gen()
     v = a_[0] * buf_[0] + a_[1] * buf_[1] + a_[2] * buf_[2];
     return v;
 }
-
-

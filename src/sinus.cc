@@ -13,4 +13,3 @@ float Sinus::Gen()
 
     return sin(this->phase_);
 }
-

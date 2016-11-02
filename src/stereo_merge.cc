@@ -10,8 +10,7 @@ std::pair<float, float> StereoMerge::Gen()
 }
 
 StereoMerge::StereoMerge(MonoSource* l, MonoSource* r)
-    : left_(l),
-    right_(r)
+    : left_(l)
+    , right_(r)
 {
 }
-

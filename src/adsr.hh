@@ -6,19 +6,18 @@
 
 class ADSR : public Envelop
 {
-    public:
-        ADSR(MonoSource* src);
+  public:
+    ADSR(MonoSource* src);
 
-        void adsr(int index, float time, float val);
-        float* adsr(int index);
+    void adsr(int index, float time, float val);
+    float* adsr(int index);
 
-        virtual float Gen() override;
+    virtual float Gen() override;
 
-        void src(MonoSource* src);
-        MonoSource* src();
+    void src(MonoSource* src);
+    MonoSource* src();
 
-    private:
-        float adsr_[5][2];
-        int index_;
+  private:
+    float adsr_[5][2];
+    int index_;
 };
-

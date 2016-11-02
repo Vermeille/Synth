@@ -14,4 +14,3 @@ std::pair<float, float> MonoToStereo::Gen()
     float val = src_->Gen();
     return std::make_pair(val, val);
 }
-

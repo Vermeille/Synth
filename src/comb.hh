@@ -7,14 +7,12 @@
 
 class Comb : public MonoSource
 {
-    public:
-        Comb(MonoSource* src);
-        virtual float Gen() override;
+  public:
+    Comb(MonoSource* src);
+    virtual float Gen() override;
 
-    private:
-        CircularBuffer<float> buf_;
-        MonoSource* src_;
-        double g_;
+  private:
+    CircularBuffer<float> buf_;
+    MonoSource* src_;
+    double g_;
 };
-
-

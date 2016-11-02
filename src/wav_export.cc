@@ -1,6 +1,6 @@
-#include <fstream>
-#include "params.hh"
 #include "wav_export.hh"
+#include "params.hh"
+#include <fstream>
 
 WavExporter::WavExporter(MonoSource* src)
     : src_(src)
@@ -44,7 +44,7 @@ void WavExporter::MkWav(const std::string& path, float duration)
     data32 = samples * 2;
     wav.write((const char*)&data32, 4);
 
-    for (int i = 0; i < samples; ++i)
+    for (uint32_t i = 0; i < samples; ++i)
     {
         data16 = Render<SInt16>(src_->Gen());
         wav.write((const char*)&data16, 2);

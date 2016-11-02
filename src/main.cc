@@ -2,30 +2,30 @@
 ** @file main.cc
 */
 
-#include <unistd.h>
 #include <cstdlib>
 #include <iostream>
+#include <unistd.h>
 #include <vector>
 
-#include "wavetable.hh"
-#include "triangle.hh"
-#include "square.hh"
-#include "sinus.hh"
 #include "saw.hh"
+#include "sinus.hh"
+#include "square.hh"
+#include "triangle.hh"
+#include "wavetable.hh"
 
-#include "fm.hh"
-#include "envelop.hh"
+#include "biquad_filter.hh"
 #include "butterworth.hh"
-#include "stereo_merge.hh"
+#include "envelop.hh"
+#include "first_order_filter.hh"
+#include "fm.hh"
 #include "mono_to_stereo.hh"
 #include "resonant_filter.hh"
-#include "first_order_filter.hh"
-#include "biquad_filter.hh"
+#include "stereo_merge.hh"
 #include "wav_export.hh"
 
-int main(int argc, char const *argv[])
+int main(int argc, char const* argv[])
 {
-    //Sinus oscl;
+    // Sinus oscl;
     Sinus oscl;
     oscl.freq(440);
 #if 0
@@ -46,14 +46,14 @@ int main(int argc, char const *argv[])
 
     Reverb r(&fm);
 #else
-# if 1
+#if 1
     BiquadFilter r(&oscl);
-    //MonoToStereo sm(&r);
+    // MonoToStereo sm(&r);
     WavExporter wav(&oscl);
     wav.MkWav("le_caca.wav", 1);
-# else
+#else
     MonoToStereo sm(&oscl);
-# endif
+#endif
 #endif
 
     float f = 200;
@@ -73,5 +73,3 @@ int main(int argc, char const *argv[])
 #endif
     return 0;
 }
-
-

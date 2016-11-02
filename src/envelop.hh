@@ -6,8 +6,8 @@
 
 class Envelop : public MonoSource
 {
-    protected:
-        float time_;
-        float time_incr_;
-        MonoSource* src_;
+  protected:
+    float time_;
+    float time_incr_;
+    MonoSource* src_;
 };

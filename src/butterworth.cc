@@ -5,12 +5,12 @@
 #include <cmath>
 #include <iostream>
 
-#include "params.hh"
 #include "butterworth.hh"
+#include "params.hh"
 
 Butterworth::Butterworth(MonoSource* src)
-    : src_(src),
-      buf_(3, 0)
+    : src_(src)
+    , buf_(3, 0)
 {
     MkLowPass(800);
 }
@@ -43,4 +43,3 @@ float Butterworth::Gen()
     v = a_[0] * buf_[0] + a_[1] * buf_[1] + a_[2] * buf_[2];
     return v;
 }
-

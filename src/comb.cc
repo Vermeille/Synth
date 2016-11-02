@@ -5,9 +5,9 @@
 #include "comb.hh"
 
 Comb::Comb(MonoSource* src)
-    : src_(src),
-    buf_(2001, 0),
-    g_(0.8)
+    : src_(src)
+    , buf_(2001, 0)
+    , g_(0.8)
 {
 }
 
@@ -19,4 +19,3 @@ float Comb::Gen()
 
     return buf_[0];
 }
-

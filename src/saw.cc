@@ -13,4 +13,3 @@ float Saw::Gen()
 
     return this->phase_ / M_TAU - 1;
 }
-

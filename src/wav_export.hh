@@ -1,14 +1,14 @@
 #pragma once
 
-#include <string>
 #include "mono_source.hh"
+#include <string>
 
 class WavExporter
 {
-    public:
-        WavExporter(MonoSource* src);
-        void MkWav(const std::string&, float duration);
+  public:
+    WavExporter(MonoSource* src);
+    void MkWav(const std::string&, float duration);
 
-    private:
-        MonoSource* src_;
+  private:
+    MonoSource* src_;
 };
