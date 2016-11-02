@@ -26,7 +26,10 @@ void ResonantFilter1::MkLowPass(float freq, float q)
     b_[2] = -b_[0];
 }
 
-void ResonantFilter1::MkHighPass(float freq) {}
+void ResonantFilter1::MkHighPass(float /* freq */)
+{
+    // TODO
+}
 
 float ResonantFilter1::Gen()
 {
@@ -51,7 +54,10 @@ void ResonantFilter2::MkLowPass(float freq, float q)
     b_[1] = r_ * r_;
 }
 
-void ResonantFilter2::MkHighPass(float freq) {}
+void ResonantFilter2::MkHighPass(float /* freq */)
+{
+    // TODO
+}
 
 float ResonantFilter2::Gen()
 {
