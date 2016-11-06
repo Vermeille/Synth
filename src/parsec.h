@@ -23,9 +23,9 @@ auto parse_int() {
            };
 }
 
-template <class Str>
-auto parse_word(Str str) {
-    return parse_seq(parse_char(), str);
+template <class Str, class T = Empty>
+auto parse_word(Str str, T x = T()) {
+    return parse_seq(parse_char(), str, x);
 }
 
 auto parse_word() {

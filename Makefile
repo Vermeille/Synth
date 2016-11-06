@@ -1,4 +1,4 @@
-CXXFLAGS=-Wall -Wextra -march=native -O3 -Isrc -std=c++14
+CXXFLAGS=-Wall -Wextra -march=native -O3 -Isrc -std=c++14 -Wfatal-errors
 
 run_tests: tests/tests
 
