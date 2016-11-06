@@ -3,7 +3,10 @@
 */
 
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
+#include <memory>
+#include <sstream>
 #include <unistd.h>
 #include <vector>
 
@@ -23,44 +26,45 @@
 #include "stereo_merge.hh"
 #include "wav_export.hh"
 
-int main(int argc, char const* argv[])
+#include "parsec.h"
+
+enum class OscilloSelect
 {
-    // Sinus oscl;
-    Sinus oscl;
-    oscl.freq(440);
-#if 0
-    Sinus oscr;
+    Sinus,
+    Square,
+    Saw
+};
 
-    //StereoMerge sm(&fm, &fm2);
-    ADSR env(&oscr);
-    env.adsr(0, 0, 0);
-    env.adsr(1, 100, 1);
-    env.adsr(2, 175, 0.50f);
-    env.adsr(3, 200, 0.50f);
-    env.adsr(4, 1000, 0.f);
+auto GenerateParser()
+{
+    auto tok = [](auto p) { return ignore_whitespaces() >> p; };
+    auto sin = parse_word("sinus", OscilloSelect::Sinus);
+    auto squ = parse_word("square", OscilloSelect::Square);
+    auto saw = parse_word("saw", OscilloSelect::Saw);
+    auto mono_sound =
+        tok((sin | squ | saw) & tok(parse_uint()) & tok(parse_uint()));
 
-    FM fm(&oscl, &env);
-    fm.mod_amp(100);
-    fm.carrier_freq(440);
-    oscr.freq(100);
+    return list_of(mono_sound << tok(!parse_char('\n')));
+}
 
-    Reverb r(&fm);
-#else
-#if 1
-    BiquadFilter r(&oscl);
-    // MonoToStereo sm(&r);
-    WavExporter wav(&oscl);
-    wav.MkWav("le_caca.wav", 1);
-#else
-    MonoToStereo sm(&oscl);
-#endif
-#endif
-
-    float f = 200;
-    float q = 0.1;
-
-#if 0
-    while (true)
+void PlayTuple(const std::tuple<OscilloSelect, int, int>& t)
+{
+    std::unique_ptr<Oscillo> osc;
+    switch (std::get<0>(t))
+    {
+    case OscilloSelect::Sinus:
+        osc.reset(new Sinus);
+        break;
+    case OscilloSelect::Square:
+        osc.reset(new Square);
+        break;
+    case OscilloSelect::Saw:
+        osc.reset(new Saw);
+        break;
+    }
+    osc->freq(std::get<1>(t));
+    MonoToStereo sm(osc.get());
+    for (int j = 0; j < (std::get<2>(t) * 441) / 1000; ++j)
     {
         for (int i = 0; i < 100; ++i)
         {
@@ -70,6 +74,40 @@ int main(int argc, char const* argv[])
         }
         std::cout.flush();
     }
-#endif
+}
+
+std::string ReadAllFile(const std::string& filename)
+{
+    if (filename == "-" || filename.empty())
+    {
+        std::cerr << "Enter all of your commands then ^D\n";
+        std::stringstream buffer;
+        buffer << std::cin.rdbuf();
+        return buffer.str();
+    }
+    else
+    {
+        std::ifstream t(filename.c_str());
+        std::stringstream buffer;
+        buffer << t.rdbuf();
+        return buffer.str();
+    }
+}
+
+int main(int argc, char const* argv[])
+{
+    std::string input = ReadAllFile(argc >= 2 ? argv[1] : "");
+    auto res = GenerateParser()(input.begin(), input.end());
+    if (!res)
+    {
+        std::cerr << "parse error\n";
+        return 1;
+    }
+
+    for (auto& sound : res->first)
+    {
+        PlayTuple(sound);
+    }
+
     return 0;
 }

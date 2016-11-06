@@ -1,7 +1,14 @@
 # Synth
 
-This is a synthesizer. It outputs sounds on stdout, so to hear what it actually plays, just do
+This is a synthesizer. It outputs sounds on stdout, so to hear what it actually
+plays, do
 
-    ./synth | aplay -f S16_LE -c2 -r44100
+    ./synth filename | aplay -f S16_LE -c2 -r44100
 
-Since I'm not interested at all in making it useful, there's absolutely no way to make it play what you want. Just edit the main, code your song in it and recompile.
+where `filename` is a script that contains lines like
+
+    sinus|square|saw freq ms
+
+The lines will be read in order, plaing the frequency `freq` for `ms`
+milliseconds. If `filename` is unspecified or `-`, those lines will be read on
+stdin and played on EOF (press ^D).
