@@ -3,6 +3,8 @@
 #include "optional.h"
 
 #include <string>
+#include <tuple>
+#include <vector>
 
 typedef std::string::const_iterator str_iterator;
 
@@ -63,19 +65,20 @@ auto parser_pred(Par par, Pred p) {
     });
 }
 
-template <class P, class T>
-auto parse_seq(P p, T str) {
+template <class P, class T, class R = Empty>
+auto parse_seq(P p, T str, R x = R()) {
     return make_parser([=](str_iterator begin, str_iterator end) {
-        ParserRet<char> ret(make_optional(std::make_pair('\0', begin)));
+        ParserRet<decltype(p(end, end)->first)> ret;
+        auto iter = begin;
         T str2 = str;
         for (; *str2; ++str2) {
-            ret = parser_pred(p, [=](char c) { return c == *str2; })(
-                ret->second, end);
+            ret = parser_pred(p, [=](auto c) { return c == *str2; })(iter, end);
             if (!ret) {
-                return ret;
+                return ParserRet<R>();
             }
+            iter = ret->second;
         }
-        return ret;
+        return make_optional(std::make_pair(x, ret->second));
     });
 }
 
@@ -116,7 +119,7 @@ auto operator!(Parser<P1> p1) {
 template <class T, class F>
 auto apply(T&& x, F&& f) {
     return make_parser([=](str_iterator begin, str_iterator end) {
-        return x(begin, end).fmap([=](auto a) {
+        return x(begin, end).fmap([=](auto&& a) {
             return std::make_pair(f(a.first), a.second);
         });
     });
@@ -127,10 +130,53 @@ auto operator%(Parser<T> x, F&& f) {
     return apply(x, f);
 }
 
+namespace {
+template <class T>
+struct to_tuple;
+
+template <class... Ts>
+struct to_tuple<std::tuple<Ts...>> {
+    template <class U>
+    static decltype(auto) do_it(U&& x) {
+        return std::forward<U>(x);
+    }
+};
+
+template <class T, class U>
+struct to_tuple<std::pair<T, U>> {
+    template <class V>
+    static decltype(auto) do_it(V&& x) {
+        return std::forward<V>(x);
+    }
+};
+
+template <class T>
+struct to_tuple {
+    template <class U>
+    static decltype(auto) do_it(U&& x) {
+        return std::make_tuple(std::forward<U>(x));
+    }
+};
+
+template <class T, class U>
+decltype(auto) as_pair(std::tuple<T, U>&& tup) {
+    return std::make_pair(std::get<0>(tup), std::get<1>(tup));
+}
+
+template <class... Ts>
+decltype(auto) as_pair(std::tuple<Ts...>&& tup) {
+    return std::move(tup);
+}
+}
+
 template <class T, class U>
 auto chain(T a, U b) {
-    return a >>= [=](auto r) {
-        return b % [=](auto r2) { return std::make_pair(r, r2); };
+    return a >>= [=](auto&& r) {
+        return b % [=](auto&& r2) {
+            return as_pair(std::tuple_cat(
+                to_tuple<typename std::decay<decltype(r)>::type>::do_it(r),
+                to_tuple<typename std::decay<decltype(r2)>::type>::do_it(r2)));
+        };
     };
 }
 
@@ -141,7 +187,7 @@ auto operator&(Parser<P1> p1, Parser<P2> p2) {
 
 template <class T, class U>
 auto skipL(T a, U b) {
-    return (a & b) % [](const auto& x) { return x.second; };
+    return a >>= [=](auto) { return b; };
 }
 
 template <class T, class U>
@@ -151,7 +197,7 @@ auto operator>>(Parser<T> a, Parser<U> b) {
 
 template <class T, class U>
 auto skipR(T a, U b) {
-    return (a & b) % [](const auto& x) { return x.first; };
+    return a >>= [=](auto&& r) { return b % [r](auto) { return r; }; };
 }
 
 template <class T, class U>
@@ -219,3 +265,20 @@ auto parse_nothing(T x) {
         return make_optional(std::make_pair(x, begin));
     });
 }
+
+template <class P>
+auto list_of(P&& p) {
+    return [=](str_iterator b, str_iterator e) {
+        std::vector<decltype(p(str_iterator(), str_iterator())->first)> vec;
+
+        auto res = parse_while1(p, &vec, [](auto&& vecptr, auto&& x) {
+            vecptr->push_back(x);
+            return vecptr;
+        })(b, e);
+
+        if (!res) {
+            return ParserRet<decltype(vec)>();
+        }
+        return make_optional(std::make_pair(std::move(vec), res->second));
+    };
+};

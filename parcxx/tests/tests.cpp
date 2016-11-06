@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
     expect_true(ignore_whitespaces() >> parse_uint(), "   666a", 666);
     expect_true(ignore_whitespaces() >> parse_int(), "-666a", -666);
     expect_true(ignore_whitespaces() >> parse_int(), "-666a", -666);
-    expect_true(parse_word("yes"), "yes", 's');
+    expect_true(parse_word("yes", 42), "yes", 42);
     expect_false(parse_word("yes"), "ayes");
     expect_false(parse_word("yes"), "yea");
     expect_true(parse_uint() << parse_char('.'), "12.", 12);
@@ -67,14 +67,12 @@ int main(int argc, char** argv) {
     expect_true(
         parse_csv(), "a,b,c", std::vector<std::string>({"a", "b", "c"}));
     expect_false(parse_csv(), ",b,c");
+    expect_true(parse_char() & parse_char(), "ab", std::make_pair('a', 'b'));
+    expect_true(parse_char() & parse_char() & parse_char(),
+                "abc",
+                std::make_tuple('a', 'b', 'c'));
+    expect_true(
+        list_of(parse_char()), "abcd", std::vector<char>({'a', 'b', 'c', 'd'}));
 
-#if 0
-    auto intp = parse_int();
-    std::function<ParserRet<int>(str_iterator, str_iterator)> expp =
-        ((parse_char('(') >> recursion(expp)) << parse_char(')')) | intp;
-    std::string a(argv[1]);
-    auto res = expp(std::begin(a), std::end(a));
-    std::cout << (res ? "y " + std::to_string(res->first) + "\n" : "n\n");
-#endif
     return 0;
 }
