@@ -7,8 +7,11 @@ plays, do
 
 where `filename` is a script that contains lines like
 
-    sinus|square|saw freq ms
+    sinus|square|saw|triangle name #declare an oscillator named `name`
+    set_freq name freq             #set the frequency of the osc `name` to `freq`
+    play duration name             #play the oscillo `name` for `ms` millisecs
 
-The lines will be read in order, plaing the frequency `freq` for `ms`
-milliseconds. If `filename` is unspecified or `-`, those lines will be read on
-stdin and played on EOF (press ^D).
+The lines will be read in order. If `filename` is unspecified or `-`, those
+lines will be read on stdin and played on EOF (press ^D).
+
+Look at examples.
