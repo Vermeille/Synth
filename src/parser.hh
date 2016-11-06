@@ -57,43 +57,55 @@ struct Play
     }
 };
 
-auto GenerateParser()
+template <class P>
+auto Tok(P p)
 {
-    auto tok = [](auto p) {
-        return skip_while(parser_pred(parse_char(), isblank)) >> p;
-    };
+    return skip_while(parser_pred(parse_char(), isblank)) >> p;
+}
+
+auto OscilloDeclParser()
+{
     auto sin = parse_word("sinus", OscilloSelect::Sinus);
     auto squ = parse_word("square", OscilloSelect::Square);
     auto saw = parse_word("saw", OscilloSelect::Saw);
     auto tri = parse_word("triangle", OscilloSelect::Triangle);
-    auto osc_decl = ((sin | squ | saw | tri) & tok(parse_word())) %
-                    [](auto x) { return DeclareOsc(x.first, x.second); };
+    return ((sin | squ | saw | tri) & Tok(parse_word())) %
+           [](auto x) { return DeclareOsc(x.first, x.second); };
+}
 
-    auto note =
-        (parse_char() & !(parse_char('#') | parse_char('b')) & parse_uint()) %
-        [](auto x) {
-            constexpr std::array<int, 7> notes_val = {
-                -3, -1, 0, 2, 4, 5, 7,
-            };
-            int note = notes_val[std::get<0>(x) - 'A'];
-            if (std::get<1>(x))
-            {
-                note += (*std::get<1>(x) == '#') ? 1 : -1;
-            }
-            return note + std::get<2>(x) * 12;
-        };
+auto NoteParser()
+{
+    auto note_name =
+        parser_pred(parse_char(), [](char c) { return 'A' <= c && c <= 'G'; });
+
+    auto octave = parser_pred(parse_uint(), [](int o) { return o <= 8; });
+
+    return (note_name & !(parse_char('#') | parse_char('b')) & octave) %
+           [](auto x) {
+               constexpr std::array<int, 7> notes_val = {
+                   {-3, -1, 0, 2, 4, 5, 7},
+               };
+               int note = notes_val[std::get<0>(x) - 'A'];
+               if (std::get<1>(x))
+               {
+                   note += (*std::get<1>(x) == '#') ? 1 : -1;
+               }
+               return note + std::get<2>(x) * 12;
+           };
+}
+
+auto GenerateParser()
+{
 
     auto set_freq =
-        (parse_word("set_note") >> (tok(parse_word()) & tok(note))) %
+        (parse_word("set_note") >> (Tok(parse_word()) & Tok(NoteParser()))) %
         [](auto x) { return SetNote(x.first, x.second); };
 
-    auto play =
-        ((parse_word("play") >> tok(parse_uint())) & tok(parse_word())) %
-        [](auto&& x) {
-            return Play(x.first, std::vector<std::string>({x.second}));
-        };
+    auto play = ((parse_word("play") >> Tok(parse_uint())) &
+                 list_of(Tok(parse_word()))) %
+                [](auto&& x) { return Play(x.first, x.second); };
 
-    auto command = (osc_decl %
+    auto command = (OscilloDeclParser() %
                     [](auto&& x) {
                         return boost::variant<DeclareOsc, SetNote, Play>(x);
                     }) |
@@ -105,5 +117,5 @@ auto GenerateParser()
                        return boost::variant<DeclareOsc, SetNote, Play>(x);
                    });
 
-    return list_of(tok(command) << tok(!parse_char('\n')));
+    return list_of(Tok(command) << !skip_while(Tok(parse_char('\n'))));
 }
