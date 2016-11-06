@@ -29,16 +29,16 @@ struct DeclareOsc
     }
 };
 
-struct SetFreq
+struct SetNote
 {
     std::string osc_name;
-    int freq;
+    int note;
 
-    SetFreq() = default;
+    SetNote() = default;
 
-    SetFreq(std::string n, int f)
+    SetNote(std::string n, int note)
         : osc_name(std::move(n))
-        , freq(f)
+        , note(note)
     {
     }
 };
@@ -69,9 +69,23 @@ auto GenerateParser()
     auto osc_decl = ((sin | squ | saw | tri) & tok(parse_word())) %
                     [](auto x) { return DeclareOsc(x.first, x.second); };
 
+    auto note =
+        (parse_char() & !(parse_char('#') | parse_char('b')) & parse_uint()) %
+        [](auto x) {
+            constexpr std::array<int, 7> notes_val = {
+                -3, -1, 0, 2, 4, 5, 7,
+            };
+            int note = notes_val[std::get<0>(x) - 'A'];
+            if (std::get<1>(x))
+            {
+                note += (*std::get<1>(x) == '#') ? 1 : -1;
+            }
+            return note + std::get<2>(x) * 12;
+        };
+
     auto set_freq =
-        (parse_word("set_freq") >> (tok(parse_word()) & tok(parse_uint()))) %
-        [](auto x) { return SetFreq(x.first, x.second); };
+        (parse_word("set_note") >> (tok(parse_word()) & tok(note))) %
+        [](auto x) { return SetNote(x.first, x.second); };
 
     auto play =
         ((parse_word("play") >> tok(parse_uint())) & tok(parse_word())) %
@@ -81,14 +95,14 @@ auto GenerateParser()
 
     auto command = (osc_decl %
                     [](auto&& x) {
-                        return boost::variant<DeclareOsc, SetFreq, Play>(x);
+                        return boost::variant<DeclareOsc, SetNote, Play>(x);
                     }) |
                    (play %
                     [](auto&& x) {
-                        return boost::variant<DeclareOsc, SetFreq, Play>(x);
+                        return boost::variant<DeclareOsc, SetNote, Play>(x);
                     }) |
                    (set_freq % [](auto&& x) {
-                       return boost::variant<DeclareOsc, SetFreq, Play>(x);
+                       return boost::variant<DeclareOsc, SetNote, Play>(x);
                    });
 
     return list_of(tok(command) << tok(!parse_char('\n')));

@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 
+#include "freqs.hh"
 #include "parser.hh"
 
 #include "saw.hh"
@@ -38,14 +39,14 @@ class Interpreter
             break;
         }
     }
-    void operator()(const SetFreq& f)
+    void operator()(const SetNote& f)
     {
         auto osc = vars_.find(f.osc_name);
         if (osc == vars_.end())
         {
             throw std::runtime_error("Can't find Oscillo " + f.osc_name);
         }
-        osc->second->freq(f.freq);
+        osc->second->freq(GetFreq(f.note));
     }
 
     void operator()(const Play& p) const
@@ -73,4 +74,4 @@ class Interpreter
             std::cout.flush();
         }
     }
-} interp;
+};

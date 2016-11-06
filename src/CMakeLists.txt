@@ -2,11 +2,14 @@ ADD_EXECUTABLE(synth
     fm.hh
     osc.hh
     saw.hh
+    freqs.hh
     sinus.hh
+    parser.hh
     square.hh
     triangle.hh
     wavetable.hh
     wav_export.hh
+    interpreter.hh
     butterworth.hh
     stereo_merge.hh
     biquad_filter.hh
@@ -17,6 +20,7 @@ ADD_EXECUTABLE(synth
     osc.cc
     saw.cc
     main.cc
+    freqs.cc
     sinus.cc
     square.cc
     triangle.cc
