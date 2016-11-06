@@ -5,6 +5,7 @@ ADD_EXECUTABLE(synth
     freqs.hh
     sinus.hh
     parser.hh
+    merger.hh
     square.hh
     triangle.hh
     wavetable.hh
@@ -22,6 +23,7 @@ ADD_EXECUTABLE(synth
     main.cc
     freqs.cc
     sinus.cc
+    merger.cc
     square.cc
     triangle.cc
     wavetable.cc

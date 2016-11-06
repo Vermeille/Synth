@@ -6,6 +6,7 @@
 #include <string>
 
 #include "freqs.hh"
+#include "merger.hh"
 #include "parser.hh"
 
 #include "saw.hh"
@@ -51,18 +52,19 @@ class Interpreter
 
     void operator()(const Play& p) const
     {
-        if (p.names.size() != 1)
+        Merger merge;
+        for (auto& name : p.names)
         {
-            throw std::runtime_error("play supports only one source");
-        }
-        auto osc = vars_.find(p.names[0]);
-        if (osc == vars_.end())
-        {
-            throw std::runtime_error("play: can't find an osc named " +
-                                     p.names[0]);
+            auto osc = vars_.find(name);
+            if (osc == vars_.end())
+            {
+                throw std::runtime_error("play: can't find an osc named " +
+                                         name);
+            }
+            merge.AddSource(osc->second.get());
         }
 
-        MonoToStereo sm(osc->second.get());
+        MonoToStereo sm(&merge);
         for (int j = 0; j < (p.ms * 441) / 1000; ++j)
         {
             for (int i = 0; i < 100; ++i)

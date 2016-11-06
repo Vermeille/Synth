@@ -8,7 +8,7 @@ plays, do
 where `filename` is a script that contains lines like
 
     sinus|square|saw|triangle name #declare an oscillator named `name`
-    set_freq name freq             #set the frequency of the osc `name` to `freq`
+    set_note name note             #set the note of the osc `name` to `note`
     play duration name             #play the oscillo `name` for `ms` millisecs
 
 The lines will be read in order. If `filename` is unspecified or `-`, those
