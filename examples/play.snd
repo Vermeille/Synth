@@ -1,0 +1,19 @@
+sinus s
+triangle t
+square q
+set_freq s 440
+play 500 s
+set_freq t 520
+play 500 t
+set_freq q 400
+play 500 q
+set_freq s 360
+play 500 s
+set_freq q 400
+play 500 q
+set_freq t 440
+play 500 t
+set_freq t 520
+play 500 t
+set_freq q 400
+play 500 q
