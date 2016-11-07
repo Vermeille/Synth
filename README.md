@@ -1,5 +1,7 @@
 # Synth
 
+[![Build Status](https://travis-ci.org/Vermeille/Synth.svg?branch=master)](https://travis-ci.org/Vermeille/Synth)
+
 This is a synthesizer. It outputs sounds on stdout, so to hear what it actually
 plays, do
 
