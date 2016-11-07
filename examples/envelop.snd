@@ -1,0 +1,23 @@
+sinus osc1
+sinus osc2
+sinus osc3
+
+merge m osc1 osc2 osc3
+
+adsr an m
+set_attack  an 1000 30
+set_decay   an 2000 20
+set_sustain an 4000 20
+set_release an 6000 1
+
+set_note osc1 C4
+set_note osc2 Eb4
+set_note osc3 G4
+play 6000 an
+
+reset an
+
+set_note osc1 B#3
+set_note osc2 D4
+set_note osc3 F4
+play 6000 an

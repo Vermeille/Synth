@@ -45,6 +45,10 @@ int main(int argc, char const* argv[])
 {
     std::string input = ReadAllFile(argc >= 2 ? argv[1] : "");
     auto res = GenerateParser()(input.begin(), input.end());
+    if (res->second != input.end())
+        std::cerr << "parsing incomplete. not parsed:\n"
+                  << input.substr(res->second - input.begin()) << "\n";
+
     if (!res)
     {
         std::cerr << "parse error\n";

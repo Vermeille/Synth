@@ -1,0 +1,12 @@
+sinus a
+triangle t
+square q
+
+set_note a C4
+set_note t Eb4
+set_note q G4
+play 500 a
+play 500 a t
+play 500 a q
+play 500 t
+play 500 t q

@@ -2,6 +2,7 @@ ADD_EXECUTABLE(synth
     fm.hh
     osc.hh
     saw.hh
+    adsr.hh
     freqs.hh
     sinus.hh
     parser.hh
@@ -20,6 +21,7 @@ ADD_EXECUTABLE(synth
     fm.cc
     osc.cc
     saw.cc
+    adsr.cc
     main.cc
     freqs.cc
     sinus.cc

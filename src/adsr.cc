@@ -10,6 +10,7 @@ ADSR::ADSR(MonoSource* src)
     time_incr_ = 1.f / 44100 * 1000;
     this->src_ = src;
     this->time_ = 0;
+    adsr(0, 0, 0);
 }
 
 void ADSR::adsr(int index, float time, float val)
@@ -17,8 +18,6 @@ void ADSR::adsr(int index, float time, float val)
     adsr_[index][0] = time;
     adsr_[index][1] = val;
 }
-
-float* ADSR::adsr(int index) { return adsr_[index]; }
 
 void ADSR::src(MonoSource* src) { src_ = src; }
 
