@@ -16,6 +16,8 @@ auto ignore_whitespaces() {
     return skip_while(parser_pred(parse_char(), isspace));
 }
 
+auto ignore_blank() { return skip_while(parser_pred(parse_char(), isblank)); }
+
 auto parse_int() {
     return !parser_pred(parse_char(), [](char c) { return c == '-'; }) >>=
            [](auto x) {
@@ -23,36 +25,22 @@ auto parse_int() {
            };
 }
 
-template <class Str>
-auto parse_word(Str str) {
-    return parse_seq(parse_char(), str);
+template <class Str, class T = Empty>
+auto parse_word(Str str, T x = T()) {
+    return parse_seq(parse_char(), str, x);
 }
 
 auto parse_word() {
-    return parse_while(parser_pred(parse_char(), isalpha),
-                       std::string(),
-                       [](std::string res, char c) {
-                           res.push_back(c);
-                           return res;
-                       });
+    return parse_while1(parser_pred(parse_char(), isalpha),
+                        std::string(),
+                        [](std::string res, char c) {
+                            res.push_back(c);
+                            return res;
+                        });
 }
 
 auto parse_char(char c) {
     return parser_pred(parse_char(), [=](char x) { return x == c; });
-}
-
-template <class P>
-void expect_false(P p, const std::string& a) {
-    std::cout << "expect F " << a << "\n";
-    auto res = p(std::begin(a), std::end(a));
-    assert(!res);
-}
-
-template <class P, class T>
-void expect_true(P p, const std::string& a, T x) {
-    std::cout << "expect T " << a << "\n";
-    auto res = p(std::begin(a), std::end(a));
-    assert(res->first == x);
 }
 
 template <class P>
