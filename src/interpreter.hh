@@ -51,6 +51,8 @@ class Interpreter
     }
 
   public:
+    typedef void result_type;
+
     void operator()(const DeclareOsc& osc)
     {
         auto inserted = vars_.insert(std::make_pair(osc.name, Type::Osc));
