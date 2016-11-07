@@ -1,0 +1,24 @@
+language: cpp
+
+sudo: required
+dist: trusty
+
+addons:
+    apt:
+        sources:
+            - llvm-toolchain-precise
+            - ubuntu-toolchain-r-test
+        packages:
+            - clang-3.9
+            - g++-5
+            - gcc-5
+            - cmake
+
+compiler:
+    - clang
+    - gcc
+
+install:
+    - if [ "$CXX" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
+
+script: mkdir build && cd build && cmake .. && make
