@@ -268,7 +268,7 @@ auto parse_nothing(T x) {
 
 template <class P>
 auto list_of(P&& p) {
-    return [=](str_iterator b, str_iterator e) {
+    return make_parser([=](str_iterator b, str_iterator e) {
         std::vector<decltype(p(str_iterator(), str_iterator())->first)> vec;
 
         auto res = parse_while1(p, &vec, [](auto&& vecptr, auto&& x) {
@@ -280,5 +280,5 @@ auto list_of(P&& p) {
             return ParserRet<decltype(vec)>();
         }
         return make_optional(std::make_pair(std::move(vec), res->second));
-    };
+    });
 };
