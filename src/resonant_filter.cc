@@ -36,7 +36,6 @@ float ResonantFilter1::Gen()
     double v = src_->Gen();
     buf_.push_front(v - a_[0] * buf_[0] - a_[1] * buf_[1]);
     v = b_[0] * buf_[0] + b_[1] * buf_[1] + b_[2] * buf_[2];
-    // std::cerr << v << " ";
     return v;
 }
 
